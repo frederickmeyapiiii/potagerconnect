@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="stats-grid">
+  <article class="stat-card">
+    <h3>Parcelles actives</h3>
+    <p class="number">4</p>
+    <span>Attribuées et suivies</span>
+  </article>
+  <article class="stat-card">
+    <h3>Actions à venir</h3>
+    <p class="number">4</p>
+    <span>Planification saisonnière</span>
+  </article>
+  <article class="stat-card">
+    <h3>Récoltes partagées</h3>
+    <p class="number">3</p>
+    <span>Déjà distribuées</span>
+  </article>
+</section>
+
+<section class="map-section">
+  <div class="map-header">
+    <h2>Cartographie du jardin</h2>
+    <p>Vue d'ensemble des parcelles et leur attribution</p>
+  </div>
+  <div class="garden-map">
+    {% for plot in plots %}
+    <div class="plot-zone plot-{{ loop.index }}" data-plot-id="{{ plot.id }}">
+      <div class="plot-label">{{ plot.name }}</div>
+      <div class="plot-details">
+        <span class="plot-gardener">{{ plot.gardener }}</span>
+        <span class="plot-crop">{{ plot.crop }}</span>
+      </div>
+      <div class="plot-status status-{{ plot.status|replace(' ', '-')|lower }}">{{ plot.status }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="grid" id="parcelles">
+  <article class="card">
+    <div class="card-head">
+      <h3>Cartographie des parcelles</h3>
+      <span class="pill">Attribution</span>
+    </div>
+    <form data-plot-form class="compact-form">
+      <div class="form-row">
+        <input name="name" placeholder="Nom de la parcelle" required>
+        <input name="gardener" placeholder="Jardinier" required>
+      </div>
+      <div class="form-row">
+        <input name="crop" placeholder="Culture" required>
+        <select name="status">
+          <option value="À planter">À planter</option>
+          <option value="En croissance">En croissance</option>
+          <option value="Prêt à récolter">Prêt à récolter</option>
+          <option value="À surveiller">À surveiller</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <select name="season">
+          <option value="Printemps">Printemps</option>
+          <option value="Été">Été</option>
+          <option value="Automne">Automne</option>
+          <option value="Hiver">Hiver</option>
+        </select>
+        <select name="rotation">
+          <option value="Rotation 1">Rotation 1</option>
+          <option value="Rotation 2">Rotation 2</option>
+          <option value="Rotation 3">Rotation 3</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">+ Ajouter parcelle</button>
+    </form>
+    <div class="plot-list" data-plot-list>
+      {% for plot in plots %}
+      <div class="plot-item" data-plot-id="{{ plot.id }}">
+        <div class="plot-info">
+          <strong>{{ plot.name }}</strong>
+          <p>{{ plot.gardener }} · {{ plot.crop }}</p>
+          <small>{{ plot.season }} · {{ plot.rotation }}</small>
+        </div>
+        <div class="plot-actions">
+          <span class="badge">{{ plot.status }}</span>
+          <button class="btn-delete" data-delete-plot="{{ plot.id }}">×</button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+
+  <article class="card" id="planning">
+    <div class="card-head">
+      <h3>Planning de plantation</h3>
+      <span class="pill">Rotations</span>
+    </div>
+    <form data-task-form class="compact-form">
+      <input name="title" placeholder="Titre de la tâche" required>
+      <textarea name="detail" placeholder="Détails de la tâche" required></textarea>
+      <div class="form-row">
+        <select name="priority">
+          <option value="Haute">Haute priorité</option>
+          <option value="Moyenne">Moyenne priorité</option>
+          <option value="Faible">Faible priorité</option>
+        </select>
+        <select name="season">
+          <option value="Printemps">Printemps</option>
+          <option value="Été">Été</option>
+          <option value="Automne">Automne</option>
+          <option value="Hiver">Hiver</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-submit">+ Ajouter tâche</button>
+    </form>
+    <ul class="list" data-task-list>
+      {% for task in tasks %}
+      <li data-task-id="{{ task.id }}">
+        <div class="task-content">
+          <strong>{{ task.title }}</strong>
+          <p>{{ task.detail }}</p>
+          <span class="priority">{{ task.priority }} · {{ task.season }}</span>
+        </div>
+        <button class="btn-delete" data-delete-task="{{ task.id }}">×</button>
+      </li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="grid">
+  <article class="card">
+    <div class="card-head">
+      <h3>Météo localisée</h3>
+      <span class="pill">Conseils automatisés</span>
+    </div>
+    {% for item in weather %}
+    <div class="weather-card">
+      <div>
+        <strong>{{ item.city }}</strong>
+        <p>{{ item.temperature }} · {{ item.condition }}</p>
+      </div>
+      <p>{{ item.advice }}</p>
+    </div>
+    {% endfor %}
+  </article>
+
+  <article class="card">
+    <div class="card-head">
+      <h3>Photos d’évolution</h3>
+      <span class="pill">Suivi visuel</span>
+    </div>
+    <div class="gallery">
+      {% for photo in photos %}
+      <div class="photo-card" data-photo="{{ photo.image_url }}" data-title="{{ photo.title }}" data-caption="{{ photo.caption }}">
+        <img src="{{ photo.image_url }}" alt="{{ photo.title }}">
+        <strong>{{ photo.title }}</strong>
+        <p>{{ photo.caption }}</p>
+        <button class="btn btn-sm btn-outline" type="button">Voir le suivi</button>
+      </div>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<div class="modal hidden" data-modal>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-content">
+    <button class="modal-close" data-close>×</button>
+    <img class="modal-image" src="" alt="">
+    <div class="modal-info">
+      <h3 class="modal-title"></h3>
+      <p class="modal-caption"></p>
+      <p class="modal-detail">Suivi du projet : images, observations et conseils pour la prochaine étape.</p>
+    </div>
+  </div>
+</div>
+
+<section class="grid">
+  <article class="card">
+    <div class="card-head">
+      <h3>Partage des récoltes</h3>
+      <span class="pill">Distribution</span>
+    </div>
+    <form data-harvest-form class="compact-form">
+      <div class="form-row">
+        <input name="crop" placeholder="Culture (ex: Tomates)" required>
+        <input name="quantity" placeholder="Quantité (ex: 5 kg)" required>
+      </div>
+      <div class="form-row">
+        <input name="gardener" placeholder="Jardinier" required>
+        <input name="location" placeholder="Emplacement" required>
+      </div>
+      <button type="submit" class="btn-submit">+ Enregistrer récolte</button>
+    </form>
+    <ul class="list" data-harvest-list>
+      {% for item in harvests %}
+      <li data-harvest-id="{{ item.id }}">
+        <div class="harvest-content">
+          <strong>{{ item.crop }}</strong>
+          <p>{{ item.quantity }} · {{ item.location }}</p>
+          <span class="priority">{{ item.gardener }}</span>
+        </div>
+        <button class="btn-distribute" data-distribute-harvest="{{ item.id }}">✓</button>
+      </li>
+      {% endfor %}
+    </ul>
+  </article>
+
+  <article class="card" id="forum">
+    <div class="card-head">
+      <h3>Forum d’entraide</h3>
+      <span class="pill">Graines & plants</span>
+    </div>
+    <form data-post-form class="post-form">
+      <input name="author" placeholder="Votre prénom" required>
+      <select name="kind">
+        <option value="Conseil">💡 Conseil</option>
+        <option value="Échange">🔄 Échange</option>
+        <option value="Forum">💬 Forum</option>
+      </select>
+      <textarea name="message" placeholder="Partagez une idée, un besoin ou une offre..." required></textarea>
+      <button type="submit" class="btn-submit"><span class="btn-icon">✨</span>Publier</button>
+    </form>
+    <div class="post-list" data-post-list>
+      {% for post in posts %}
+      <article class="post-card">
+        <div class="post-meta">
+          <div class="post-author">
+            <span class="author-avatar">{{ post.author[0]|upper }}</span>
+            <strong>{{ post.author }}</strong>
+          </div>
+          <span class="post-kind post-kind-{{ post.kind|lower }}">{{ post.kind }}</span>
+        </div>
+        <p>{{ post.message }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </article>
+</section>
+
+<section class="impact-card" id="impact">
+  <h3>Impact social</h3>
+  <p>PotagerConnect vise à promouvoir l’agriculture urbaine, renforcer le lien social autour de la nature et simplifier la coordination des jardins partagés.</p>
+</section>
+{% endblock %}

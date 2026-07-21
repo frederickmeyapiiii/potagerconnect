@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PotagerConnect</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  </head>
+  <body>
+    <header class="hero-banner">
+      <nav class="top-nav">
+        <div class="brand">
+          <span class="brand-icon">🌱</span>
+          PotagerConnect
+        </div>
+        <div class="nav-links">
+          <a href="#parcelles" class="nav-link">
+            <span class="nav-icon">🗺️</span>
+            Parcelles
+          </a>
+          <a href="#planning" class="nav-link">
+            <span class="nav-icon">📅</span>
+            Planning
+          </a>
+          <a href="#forum" class="nav-link">
+            <span class="nav-icon">💬</span>
+            Forum
+          </a>
+        </div>
+        <a class="btn btn-secondary" href="#impact">
+          <span class="btn-icon">🌍</span>
+          Impact
+        </a>
+      </nav>
+
+      <div class="hero-content">
+        <div class="hero-copy">
+          <span class="eyebrow">Option D • Jardins partagés numériques</span>
+          <h1>Cultivez ensemble, partagez mieux</h1>
+          <p class="subtitle">Suivi des parcelles, météo locale, troc de semences et partage des récoltes, le tout dans une seule interface moderne et intuitive.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#forum">
+              <span class="btn-icon">✍️</span>
+              Publier un message
+            </a>
+            <a class="btn btn-outline" href="#carousel">
+              <span class="btn-icon">📸</span>
+              Voir les récoltes
+            </a>
+          </div>
+        </div>
+        <div class="hero-cards">
+          <article class="hero-card hero-card-1">
+            <div class="card-icon">🗺️</div>
+            <h4>Cartographie</h4>
+            <p>Visualisez les parcelles et attribuez facilement les jardiniers.</p>
+          </article>
+          <article class="hero-card hero-card-2">
+            <div class="card-icon">🌤️</div>
+            <h4>Conseils météo</h4>
+            <p>Recevez des alertes et recommandations locales automatiquement.</p>
+          </article>
+          <article class="hero-card hero-card-3">
+            <div class="card-icon">🤝</div>
+            <h4>Forum</h4>
+            <p>Échangez des idées, graines et plants avec la communauté.</p>
+          </article>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+  </body>
+</html>
